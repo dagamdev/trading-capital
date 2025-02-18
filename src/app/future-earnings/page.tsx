@@ -13,9 +13,21 @@ interface Day {
 
 export default function FutureEarningsPage () {
   const [balance, setBalance] = useState('100')
-  const [profitPercent, setProfitPercent] = useState('85')
+  const [profitPercent, setProfitPercent] = useState('15')
   const [numberOfDays, setNumberOfDays] = useState(5)
   const [days, setDays] = useState<Day[]>([])
+
+  useEffect(() => {
+    if (typeof localStorage !== 'undefined') {
+      const balance = localStorage.getItem('balance')
+      const profitPercent = localStorage.getItem('profitPercent')
+      const numberOfDays = localStorage.getItem('numberOfDays')
+
+      if (balance) setBalance(balance)
+      if (profitPercent) setProfitPercent(profitPercent)
+      if (numberOfDays) setNumberOfDays(+numberOfDays)
+    }
+  }, [])
 
   useEffect(() => {
     const days: Day[] = []
@@ -33,6 +45,12 @@ export default function FutureEarningsPage () {
       })
     }
     setDays(days)
+
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('balance', balance)
+      localStorage.setItem('profitPercent', profitPercent)
+      localStorage.setItem('numberOfDays', numberOfDays.toString())
+    }
   }, [balance, profitPercent, numberOfDays])
 
   const handleChangeValue = (setValue: Dispatch<SetStateAction<string>>) => ({target: {value}}: ChangeEvent<HTMLInputElement>) => {
@@ -94,7 +112,7 @@ export default function FutureEarningsPage () {
           <p>Day: <strong className='block'>{day.id}</strong></p>
           <p>Balance: <strong className='block'>{day.balance.toLocaleString()}</strong></p>
           <p>Earnings: <strong className='block'>{day.earnings.toLocaleString()}</strong></p>
-          <p>Aumento del capital inicial: <strong className='block'>{day.capitalGrowthPercentage.toFixed(2)}%</strong></p>
+          <p>Aumento del capital inicial: <strong className='block'>{parseFloat(day.capitalGrowthPercentage.toFixed(2))}%</strong></p>
         </li>)}
       </ol>
     </main>
