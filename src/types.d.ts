@@ -1,7 +1,6 @@
-declare interface Operation {
-  id: string
-  status: 'success' | 'pending' | 'failed'
-  investment: number
-  profit: number
-  balance: number
+declare interface Settings {
+  totalToRisk: number
+  totalOperations: number
+  ITMs: number
+  brokerPayout: number
 }
